@@ -1,7 +1,4 @@
 MNT-840026654258 staged grey/black backdrop
 MNT-840026665704 staged grey/black backdrop
-MNT-840026662536 staged grey/black backdrop
 MNT-840026661140 staged grey/black backdrop
 MNT-840026657532 staged grey/black backdrop
-MNT-840026642842 staged grey/black backdrop
-MNT-840026642859 staged grey/black backdrop

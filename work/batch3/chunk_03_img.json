@@ -118,5 +118,15 @@
   "source": "www.elryan.com (relaxed-size)",
   "w": 600,
   "h": 600
+ },
+ "MNT-3014260289287": {
+  "url": "https://m.media-amazon.com/images/P/B01N29JS66.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B01N29JS66"
+ },
+ "MNT-3061375781045": {
+  "url": "https://m.media-amazon.com/images/P/B07MMFCXDN.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B07MMFCXDN"
  }
 }

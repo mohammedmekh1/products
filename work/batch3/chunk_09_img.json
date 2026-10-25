@@ -82,5 +82,20 @@
   "source": "www.ansargallery.com",
   "w": 1200,
   "h": 1200
+ },
+ "MNT-3574669908108": {
+  "url": "https://m.media-amazon.com/images/P/B07PQGPFDN.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B07PQGPFDN"
+ },
+ "MNT-3574669908245": {
+  "url": "https://m.media-amazon.com/images/P/B083P6THWN.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B083P6THWN"
+ },
+ "MNT-3574669908528": {
+  "url": "https://m.media-amazon.com/images/P/B07T1BTP3Z.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B07T1BTP3Z"
  }
 }

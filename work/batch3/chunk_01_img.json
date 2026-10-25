@@ -94,5 +94,25 @@
   "source": "mielleorganics.com (nobarcode)",
   "w": 3000,
   "h": 3000
+ },
+ "MNT-840026642842": {
+  "url": "https://m.media-amazon.com/images/P/B0892VJ4PZ.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B0892VJ4PZ"
+ },
+ "MNT-840026642859": {
+  "url": "https://m.media-amazon.com/images/P/B086L4RL41.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B086L4RL41"
+ },
+ "MNT-840026662536": {
+  "url": "https://m.media-amazon.com/images/P/B0C89RMJ89.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B0C89RMJ89"
+ },
+ "MNT-830372000496": {
+  "url": "https://m.media-amazon.com/images/P/B01EW1WBXQ.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B01EW1WBXQ"
  }
 }

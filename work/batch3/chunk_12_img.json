@@ -70,5 +70,50 @@
   "source": "www.fragmantic.com (relaxed-size)",
   "w": 360,
   "h": 360
+ },
+ "MNT-3600531465230": {
+  "url": "https://m.media-amazon.com/images/P/B07CS9D1R6.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B07CS9D1R6"
+ },
+ "MNT-3600531701802": {
+  "url": "https://m.media-amazon.com/images/P/B0DSJMFRTN.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B0DSJMFRTN"
+ },
+ "MNT-3600531384159": {
+  "url": "https://m.media-amazon.com/images/P/B06XGM135P.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B06XGM135P"
+ },
+ "MNT-3600531513382": {
+  "url": "https://m.media-amazon.com/images/P/B07D7LXBQX.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B07D7LXBQX"
+ },
+ "MNT-3600531691912": {
+  "url": "https://m.media-amazon.com/images/P/B0D8JJ9DTW.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B0D8JJ9DTW"
+ },
+ "MNT-3600531700386": {
+  "url": "https://m.media-amazon.com/images/P/B0DGQS2WKS.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B0DGQS2WKS"
+ },
+ "MNT-3600531411183": {
+  "url": "https://m.media-amazon.com/images/P/B07PC1TRSC.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B07PC1TRSC"
+ },
+ "MNT-3600531631390": {
+  "url": "https://m.media-amazon.com/images/P/B092K24B2Q.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B092K24B2Q"
+ },
+ "MNT-3600540539397": {
+  "url": "https://m.media-amazon.com/images/P/B006ZX7T32.01._SCRMZZZZZZ_.jpg",
+  "source": "Amazon",
+  "asin": "B006ZX7T32"
  }
 }
