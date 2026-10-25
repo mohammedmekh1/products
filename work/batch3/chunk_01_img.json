@@ -123,5 +123,20 @@
  "MNT-819265008016": {
   "url": "https://tdawi.com/media/catalog/product/cache/74c1057f7991b4edb2bc7bdaa94de933/8/1/819265008016.jpg",
   "source": "tdawi.com"
+ },
+ "MNT-840026654258": {
+  "url": "https://cdn.shopify.com/s/files/1/0341/3458/9485/files/FB_SMR26_T2PRODUCT_PDP_YOUMIST_1200X1500_22c9da17-9af0-43ac-aa9a-0b22b90a5d4d.jpg?v=1788542524",
+  "source": "cdn.shopify.com",
+  "note": "grey backdrop accepted by merchant"
+ },
+ "MNT-840026661140": {
+  "url": "https://fentybeauty.com/cdn/shop/products/FB_HOL22_T2PRODUCT_CONCRETE_GLOSS_BOMB_ICE_INSTANT_COOLING_LIP_LUMINIZER_CLOSED_1200x1500_e4978753-3cb9-4f55-8b8a-9deec67f9fc5.jpg?v=1762268838&width=1200",
+  "source": "fentybeauty.com",
+  "note": "grey backdrop accepted by merchant"
+ },
+ "MNT-840026665704": {
+  "url": "https://fentybeauty.com/cdn/shop/products/FB50008_FB5019_0824f09a-5ac4-466b-a70b-7a3384796985.jpg?v=1762273656&width=1200",
+  "source": "fentybeauty.com",
+  "note": "grey backdrop accepted by merchant"
  }
 }
