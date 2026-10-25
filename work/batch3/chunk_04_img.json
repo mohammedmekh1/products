@@ -100,5 +100,17 @@
   "source": "euro-pharmas.com",
   "w": 800,
   "h": 800
+ },
+ "MNT-3337875414067": {
+  "url": "https://www.pharmaciepolygone.com/media/cache/original/6e/e3/46ca1471e56e3b71025c2388a46f.jpeg",
+  "source": "www.pharmaciepolygone.com (relaxed-size)",
+  "w": 750,
+  "h": 558
+ },
+ "MNT-3337875543248": {
+  "url": "https://cdn.shopify.com/s/files/1/2959/8080/products/vichy-mineral-89-hyaluronic-acid-face-serum-vichy-30ml-shop-at-exclusive-beauty-club-341124.jpg?v=1762269235",
+  "source": "exclusivebeautyclub.com (relaxed-size)",
+  "w": 687,
+  "h": 687
  }
 }

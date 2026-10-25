@@ -1,3 +1,2 @@
-MNT-3337875597487 image under 800px
 MNT-3337875795456 staged grey/black backdrop
 MNT-3337875816809 staged grey/black backdrop
