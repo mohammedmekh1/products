@@ -17,10 +17,10 @@ clean = json.load(open("clean.json"))
 qty = {r[0]: r[2] for r in openpyxl.load_workbook(D + "batch4-review.xlsx", read_only=True)["الكميات"].iter_rows(min_row=2, values_only=True)}
 imgs = {k: [v] for k, v in json.load(open("images.json")).items()}
 for k, v in json.load(open("img2_secondary.json")).items(): imgs[k].append(v)
-for f in ("img2_ansar.json", "img2_brand.json", "img2_eu.json", "img2_web.json"):
+for f in ("img2_ansar.json", "img2_brand.json", "img2_eu.json", "img2_web.json", "img2_web2.json"):
     for k, v in json.load(open(f)).items(): imgs.setdefault(k, v)
 over = json.load(open("seo_override.json"))  # SEO fields missing from the sheet, kept from the first queue
-junk = re.compile(r"<p>(?:(?![؀-ۿ])[^<]){0,80}</p>")
+junk = re.compile(r"<p>(?:(?![؀-ۿ])[^<]){0,80}</p>|<p><strong>[^<]*exclude_reason[^<]*</strong></p>")
 q, miss = [], set()
 for r in openpyxl.load_workbook(D + "batch4-products-complete.xlsx", read_only=True).worksheets[0].iter_rows(min_row=3, values_only=True):
     sku = r[9]

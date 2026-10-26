@@ -28,8 +28,8 @@ def one(g):
     res=[]
     for u in W[g]:
         for i in dict.fromkeys(imgs_of(u)):
-            if i not in res and size(i)>=600: res.append(i)
-            if len(res)>=4: return g,res
+            if i not in res and size(i)>=500: res.append(i)
+            if len(res)>=5: return g,res
     return g,res
 with cf.ThreadPoolExecutor(6) as ex:
     for g,r in ex.map(one,[g for g in W if g not in C]): C[g]=r
