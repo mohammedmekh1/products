@@ -14,6 +14,7 @@ CAT = {  # last path segment -> (usual category, second category: parent or clos
     "مكياج العيون": (EYES, ROOT), "العيون": (EYES, ROOT),
 }
 clean = json.load(open("clean.json"))
+EXCL = {l.split("\t")[0] for l in open("excluded_size.txt")}  # size/variant conflicts with barcode or brand catalog
 qty = {r[0]: r[2] for r in openpyxl.load_workbook(D + "batch5-review.xlsx", read_only=True)["الكميات"].iter_rows(min_row=2, values_only=True)}
 imgs = json.load(open("images_ok.json"))
 over = {}
@@ -21,7 +22,7 @@ junk = re.compile(r"<p>(?:(?![؀-ۿ])[^<]){0,80}</p>|<p><strong>[^<]*exclude_rea
 q, miss = [], set()
 for r in openpyxl.load_workbook(D + "batch5-products-complete.xlsx", read_only=True).worksheets[0].iter_rows(min_row=3, values_only=True):
     sku = r[9]
-    if not sku or (sku not in imgs and "--all" not in sys.argv): continue
+    if not sku or sku in EXCL or (sku not in imgs and "--all" not in sys.argv): continue
     seg = r[2].split(">")[-1].strip()
     if seg not in CAT: miss.add(seg); continue
     c = clean[sku]
