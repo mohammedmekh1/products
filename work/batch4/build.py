@@ -24,7 +24,7 @@ junk = re.compile(r"<p>(?:(?![؀-ۿ])[^<]){0,80}</p>|<p><strong>[^<]*exclude_rea
 q, miss = [], set()
 for r in openpyxl.load_workbook(D + "batch4-products-complete.xlsx", read_only=True).worksheets[0].iter_rows(min_row=3, values_only=True):
     sku = r[9]
-    if not sku or sku not in imgs: continue
+    if not sku: continue  # products without a verified image are created too; the owner adds their images by hand
     seg = r[2].split(">")[-1].strip()
     if seg not in CAT: miss.add(seg); continue
     c = clean[sku]
@@ -32,7 +32,7 @@ for r in openpyxl.load_workbook(D + "batch4-products-complete.xlsx", read_only=T
          "description": junk.sub("", c["store"]), "categories": list(CAT[seg]), "weight": 500, "weight_type": "g",
          "require_shipping": True, "quantity": int(qty.get(sku) or 0),
          "metadata_title": c["seo_title"], "metadata_description": c["seo"],
-         "images": imgs[sku][:2], "image_alt": r[1].strip()[:255]}
+         "images": imgs.get(sku, [])[:2], "image_alt": r[1].strip()[:255]}
     p.update(over.get(sku, {}))
     if r[25]: p["gtin"] = str(r[25])
     q.append(p)
