@@ -59,7 +59,10 @@ async function one(x){
     const set=['description','categories','weight','weight_type','require_shipping','quantity','metadata_title','metadata_description','sku','status'];
     const inp={name:x.name,price:x.price,product_type:'product',sku:x.sku,description:x.description,categories:x.categories,weight:x.weight,weight_type:x.weight_type,require_shipping:true,quantity:x.quantity,metadata_title:x.metadata_title,metadata_description:x.metadata_description,status:'hidden',set};
     if(x.gtin){inp.gtin=x.gtin;set.push('gtin')}
-    const r=await call('products_create',inp);
+    let r;
+    try{r=await call('products_create',inp)}
+    catch(e){if(!/sku|مستخدم|taken|exists/i.test(String(e&&e.message)))throw e;
+      r=await call('products_sku_get',{sku:x.sku});log(x.name+': موجود مسبقاً، ستُضاف الصورة الأصلية رئيسية','warn')}
     const id=find(r,'id');
     if(!id)throw new Error('create: '+JSON.stringify(r).slice(0,300));
     st={id:Number(id),name:x.name};await ref.set(st);
