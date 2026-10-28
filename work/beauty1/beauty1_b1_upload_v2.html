@@ -68,7 +68,7 @@ async function one(x){
     st={id:Number(id),name:x.name};await ref.set(st);
   }
   if(!st.hidden){await hide(st.id);st.hidden=true;await ref.set(st)}
-  const imgs=x.images||(x.image_url?[x.image_url]:[]);
+  const imgs=[];
   if(st.imgs===undefined)st.imgs=st.image?1:0;
   if(!imgs.length)st.noimage=true;
   const alt=(x.image_alt||x.name).replace(/[^\p{L}\p{N} ]/gu,' ').replace(/\s+/g,' ').trim().slice(0,200);
