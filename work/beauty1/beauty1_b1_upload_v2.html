@@ -52,7 +52,7 @@ async function hide(id){
   await call('products_update_apply',{product_id:id,confirm_token:tok});
 }
 async function one(x){
-  const ref=db.doc('uploads/'+x.sku);
+  const ref=db.doc('uploads2/'+x.sku);
   const snap=await ref.get();let st=snap.exists?snap.data():{};
   if(st.done)return 'skip';
   if(!st.id){
@@ -92,7 +92,7 @@ async function run(){
     $('st').textContent=`${i+1} / ${Q.length} — تم ${ok} · سابقاً ${skip} · أخطاء ${bad}`;
     try{const r=await one(x);if(r==='skip')skip++;else{ok++;log('✓ '+x.name,'ok')}}
     catch(e){bad++;const m=(e&&(e.code?e.code+': ':'')+(e.message||e))||'';log('✗ '+x.name+' — '+m,'bad');
-      try{const ref=db.doc('uploads/'+x.sku);const s=await ref.get();await ref.set({...(s.exists?s.data():{}),error:String(m).slice(0,300)})}catch{}
+      try{const ref=db.doc('uploads2/'+x.sku);const s=await ref.get();await ref.set({...(s.exists?s.data():{}),error:String(m).slice(0,300)})}catch{}
       if(e&&['not_granted','needs_reauth','server_not_connected','consent_required','capability_disabled'].includes(e.code)){log('توقف الرفع: يلزم منح الإذن لموصل سلة.','warn');break}
       if(e&&e.code==='rate_limited'){await sleep(e.retryAfterMs||20000);i--;bad--;continue}}
     await sleep(300);
