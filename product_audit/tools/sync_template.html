@@ -37,6 +37,7 @@ const Q=JSON.parse(document.getElementById('q').textContent),B='__BATCH__',SV='s
 const $=id=>document.getElementById(id);$('cnt').textContent='عدد المنتجات في هذه الصفحة: '+Q.length;
 let stop=false,db=null,mcp=null,redo=false;const C={updated:0,noop:0,created:0,fail:0,skipped:0};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function wr(fn){for(let i=0;i<4;i++){try{return await fn()}catch(e){if(i===3||!/unavailable|temporar/i.test(String((e&&e.message)||e)))throw e;await sleep(1500*(i+1))}}}
 function log(t,c){const d=document.createElement('div');d.textContent=t;if(c)d.className=c;$('log').prepend(d)}
 function chips(){$('chips').replaceChildren(...Object.entries({'محدَّث':C.updated,'بلا تغيير':C.noop,'منشأ':C.created,'سابقاً':C.skipped,'أخطاء':C.fail}).map(([k,v])=>{const s=document.createElement('span');s.className='chip';s.textContent=k+' '+v;return s}))}
 function find(o,k){if(!o||typeof o!=='object')return;if(k in o)return o[k];for(const v of Object.values(o)){const r=find(v,k);if(r!==undefined)return r}}
@@ -65,11 +66,11 @@ function diff(x,p){
   return {u,ch,oldPrice:pr};
 }
 async function one(x){
-  const ref=db.doc('sync'+B+'/n'+x.n);const snap=await ref.get();const st=snap.exists?snap.data():{};
+  const ref=db.doc('sync'+B+'/n'+x.n);const snap=await wr(()=>ref.get());const st=snap.exists?snap.data():{};
   if(st.done&&!(redo&&st.error))return 'skip';
   let p=await lookup(x),res={n:x.n,name:x.name,at:Date.now()};
   if(p){
-    const {u,ch,oldPrice}=diff(x,p);res.id=p.id;res.found='store';res.oldPrice=oldPrice;res.newPrice=x.price;res.hasImage=!!(p.thumbnail||p.main_image);res.brand=(p.brand&&p.brand.name)||'';
+    const {u,ch,oldPrice}=diff(x,p);res.id=p.id;res.found='store';res.oldPrice=oldPrice;res.newPrice=x.price;res.hasImage=!!(p.thumbnail||p.main_image);res.url=p.url||'';res.image=p.main_image||p.thumbnail||'';res.brand=(p.brand&&p.brand.name)||'';
     if(!ch.length){res.result='noop';res.changed=[]}
     else{
       let chx=ch.slice(),ux={...u};
@@ -100,7 +101,7 @@ async function one(x){
     const r=await call('products_create',inp);const id=find(r,'id');if(!id)throw new Error('create: '+JSON.stringify(r).slice(0,300));
     res.id=Number(id);res.found='created';res.result='created';res.changed=['all'];res.hasImage=false;res.newPrice=x.price;
   }
-  await ref.set({...res,done:true});return res.result;
+  await wr(()=>ref.set({...res,done:true}));return res.result;
 }
 async function run(){
   $('go').disabled=true;$('stop').disabled=false;stop=false;
@@ -111,7 +112,7 @@ async function run(){
     try{const r=await one(x);
       if(r==='skip')C.skipped++;else if(r==='noop'){C.noop++;log('= '+x.n+' بلا تغيير: '+x.name)}else if(r==='created'){C.created++;log('+ '+x.n+' أُنشئ: '+x.name,'ok')}else{C.updated++;log((r==='updated'?'✓ ':'؟ ')+x.n+' '+x.name,r==='updated'?'ok':'warn')}}
     catch(e){C.fail++;const m=(e&&(e.code?e.code+': ':'')+(e.message||e))||'';log('✗ '+x.n+' '+x.name+' — '+m,'bad');
-      try{const ref=db.doc('sync'+B+'/n'+x.n);const s=await ref.get();await ref.set({...(s.exists?s.data():{n:x.n,name:x.name}),error:String(m).slice(0,300),done:false})}catch{}
+      try{const ref=db.doc('sync'+B+'/n'+x.n);const s=await wr(()=>ref.get());await wr(()=>ref.set({...(s.exists?s.data():{n:x.n,name:x.name}),error:String(m).slice(0,300),done:false}))}catch{}
       if(e&&['not_granted','needs_reauth','server_not_connected','consent_required','capability_disabled'].includes(e.code)){log('توقف: يلزم منح الإذن لموصل سلة.','warn');break}
       if(e&&e.code==='rate_limited'){await sleep(e.retryAfterMs||20000);i--;C.fail--;continue}}
     chips();await sleep(300);
