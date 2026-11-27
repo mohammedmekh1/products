@@ -1,0 +1,126 @@
+<title>مزامنة دفعة A001v2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: single column work log; palette: cool paper + teal ink */
+:root{--bg:#f2f5f6;--card:#fff;--fg:#17242a;--muted:#587078;--accent:#0b6e7a;--on-accent:#fff;--line:#d9e2e5;--ok:#1b7f4a;--bad:#b3261e;--warn:#955f00;--chip:#e7eff1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a1e;--card:#172429;--fg:#e4eef1;--muted:#93aab1;--accent:#4cc3d1;--on-accent:#06262b;--line:#27393f;--ok:#62d492;--bad:#ff8f86;--warn:#e6b955;--chip:#1f3238;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a1e;--card:#172429;--fg:#e4eef1;--muted:#93aab1;--accent:#4cc3d1;--on-accent:#06262b;--line:#27393f;--ok:#62d492;--bad:#ff8f86;--warn:#e6b955;--chip:#1f3238;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:Tahoma,system-ui,sans-serif;direction:rtl;padding-block:28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:760px;margin:0 auto;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:12px;min-width:0}
+h1{font-size:20px;margin:0}p{margin:0;color:var(--muted);line-height:1.8}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+button{font:inherit;font-size:15px;background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;padding:10px 16px;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}button.sec{background:transparent;color:var(--fg);border:1px solid var(--line)}
+button:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--accent);width:0}
+.stats{font-variant-numeric:tabular-nums;color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:var(--chip);border-radius:999px;padding:4px 12px;font-size:13px;font-variant-numeric:tabular-nums}
+#log{max-height:440px;overflow:auto;font-size:13px;line-height:1.7;display:grid;gap:2px;min-width:0}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+</style>
+<main>
+<div class="card">
+<h1>مزامنة منتجات الدفعة A001v2 مع سلة</h1>
+<p>لكل منتج: تبحث الصفحة عنه في المتجر بالباركود ثم بالـSKU. إن وُجد، تحدّث فقط الحقول المختلفة (الاسم، الوصف، ميتا، السعر = الأصلي × 1.45، GTIN المصحَّح) عبر معاينة ثم تطبيق، ثم تتحقق من النتيجة. إن لم يوجد، تنشئه بحالة مخفي. لا تحذف شيئاً ولا تغيّر الحالة ولا الكمية. المنتج المكتمل لا يُعاد، فيمكن الإيقاف والمتابعة بأمان. سيطلب المتصفح إذن موصل سلة عند أول تشغيل.</p>
+<p id="cnt"></p>
+<div class="row"><button id="go" type="button">ابدأ المزامنة</button><button id="stop" type="button" class="sec" disabled>إيقاف</button><button id="redo" type="button" class="sec">إعادة المنتجات التي فشلت</button></div>
+<div class="bar"><i id="pb"></i></div>
+<div class="stats" id="st">جاهز.</div>
+<div class="chips" id="chips"></div>
+</div>
+<div class="card"><div id="log"></div></div>
+</main>
+<script type="application/json" id="q">[{"n": 5, "barcode": "30079847", "gtin": "30079847", "price": 29, "name": "ماسكارا Maybelline New York سوداء", "brand": "Maybelline New York", "description": "\u003cp>ماسكارا مايبيلين السوداء من Maybelline New York، ماسكارا باللون الأسود لتحديد الرموش وإبرازها ضمن مكياج العيون اليومي أو مكياج المناسبات.\u003c/p>\u003cp>\u003cbr>\u003c/p>\u003cp>معلومات المنتج:\u003c/p>\u003cul>\u003cli>الأسم | ماسكارا مايبيلين السوداء — Maybelline New York Black Mascara\u003c/li>\u003cli>النوع | ماسكارا للرموش\u003c/li>\u003cli>اللون | أسود\u003c/li>\u003cli>العلامة التجارية | Maybelline New York\u003c/li>\u003c/ul>\u003cp>\u003cbr>\u003c/p>\u003cp>وصف المنتج:\u003c/p>\u003cp>تُعد الماسكارا السوداء من أكثر خطوات مكياج العيون استخداماً، فهي تمنح الرموش لوناً داكناً واضحاً يبرز إطار العين دون الحاجة إلى خطوات كثيرة. وتأتي هذه الماسكارا من Maybelline New York بلون أسود كما يشير اسم المنتج، مع فرشاة لتوزيع المنتج على الرموش من الجذور إلى الأطراف.\u003c/p>\u003cp>يمكن الاكتفاء بطبقة واحدة لمظهر خفيف للاستخدام اليومي، أو إضافة طبقة ثانية بعد أن تجف الأولى إذا رغبتِ في مظهر أوضح للمناسبات. وتناسب الماسكارا السوداء مختلف ألوان العيون وطرق المكياج، سواء كنتِ تضعين ظلالاً ملونة أو تفضلين إطلالة بسيطة.\u003c/p>\u003cp>المميزات:\u003c/p>\u003cul>\u003cli>ماسكارا بلون أسود كلاسيكي يناسب مختلف الإطلالات.\u003c/li>\u003cli>فرشاة مخصصة لتوزيع الماسكارا على الرموش.\u003c/li>\u003cli>يمكن وضعها بطبقة واحدة أو أكثر بحسب المظهر المطلوب.\u003c/li>\u003cli>تناسب مكياج العيون اليومي ومكياج المناسبات.\u003c/li>\u003cli>تتكامل مع الأيلاينر والظلال في إطلالة العين.\u003c/li>\u003cli>عبوة عملية يسهل حملها في حقيبة المكياج.\u003c/li>\u003c/ul>\u003cp>لمن يناسب؟:\u003c/p>\u003cul>\u003cli>لمن تبحث عن ماسكارا سوداء بسيطة وعملية.\u003c/li>\u003cli>لمن تفضل تحديد الرموش دون مبالغة في الخطوات.\u003c/li>\u003cli>لمن تريد إضافة ماسكارا إلى حقيبة المكياج اليومية.\u003c/li>\u003cli>لمن تحب التحكم بكثافة الرموش عبر عدد الطبقات.\u003c/li>\u003c/ul>\u003cp>طريقة الاستخدام:\u003c/p>\u003cp>ابدئي من جذور الرموش العلوية وحركي الفرشاة بشكل متعرج نحو الأطراف. اتركي الطبقة الأولى تجف قليلاً قبل إضافة الثانية إن رغبتِ بكثافة أكبر. أغلقي العبوة بإحكام بعد كل استخدام، وأزيلي المكياج مساءً بمزيل مناسب للعين.\u003c/p>\u003cp>تنبيهات:\u003c/p>\u003cp>للاستخدام الخارجي فقط. تجنبي ملامسة العينين، واغسليهما بالماء عند ملامسة المنتج لهما. أوقفي الاستخدام عند ظهور تهيج أو حساسية، ولا تشاركي الماسكارا مع الآخرين لأسباب النظافة.\u003c/p>\u003cp>نبذة عن العلامة التجارية:\u003c/p>\u003cp>Maybelline New York علامة مكياج أمريكية تأسست عام 1915 وتنتمي إلى مجموعة لوريال. تقدم مستحضرات للعيون والوجه والشفاه، وتشتهر بالماسكارا وأقلام العيون.\u003c/p>\u003cp>الأسئلة الشائعة:\u003c/p>\u003cp>ما لون هذه الماسكارا؟\u003c/p>\u003cp>لونها أسود كما يظهر في اسم المنتج.\u003c/p>\u003cp>هل أضع أكثر من طبقة؟\u003c/p>\u003cp>نعم، يمكنك إضافة طبقة ثانية بعد أن تجف الأولى للحصول على مظهر أوضح.\u003c/p>\u003cp>كيف أزيلها؟\u003c/p>\u003cp>تُزال بمزيل مكياج مناسب للعين بلطف دون فرك قوي.\u003c/p>\u003cp>هل تناسب الاستخدام اليومي؟\u003c/p>\u003cp>نعم، يمكن استخدامها يومياً ضمن مكياج العيون مع الالتزام بتعليمات العبوة.\u003c/p>", "mt": "ماسكارا مايبيلين سوداء للرموش", "md": "ماسكارا مايبيلين السوداء من Maybelline New York لتحديد الرموش وإبرازها بفرشاة تغطي الجذور والأطراف. تناسب المكياج اليومي والمناسبات في السعودية.", "skus": ["MNT-30079847", "MNT-R5", "MNT-30079847"]}, {"n": 6, "barcode": "30096585", "gtin": "30096585", "price": 28, "name": "كونسيلر Maybelline New York فيت مي درجة 10", "brand": "Maybelline New York", "description": "\u003cp>كونسيلر مايبيلين فيت مي رقم 10 Maybelline New York Fit Me Concealer، كونسيلر سائل بالدرجة 10 لتغطية الهالات والعيوب الصغيرة وتوحيد مظهر البشرة.\u003c/p>\u003cp>\u003cbr>\u003c/p>\u003cp>معلومات المنتج:\u003c/p>\u003cul>\u003cli>الأسم | كونسيلر مايبيلين فيت مي — Maybelline Fit Me Concealer\u003c/li>\u003cli>النوع | كونسيلر سائل\u003c/li>\u003cli>الدرجة | 10\u003c/li>\u003cli>العلامة التجارية | Maybelline New York\u003c/li>\u003c/ul>\u003cp>\u003cbr>\u003c/p>\u003cp>وصف المنتج:\u003c/p>\u003cp>ينتمي هذا الكونسيلر إلى خط Fit Me من Maybelline New York، وهو خط يضم منتجات للوجه بدرجات متعددة تتيح اختيار ما يقارب لون البشرة. تأتي الدرجة 10 ضمن الدرجات الفاتحة في التشكيلة، وتُستخدم لتغطية مظهر الهالات الداكنة والبقع والعيوب الصغيرة قبل تثبيت المكياج.\u003c/p>\u003cp>قوامه سائل يسهل فرده، وتُوضع كمية صغيرة منه على المنطقة المطلوبة ثم تُدمج بأطراف الأصابع أو بإسفنجة المكياج حتى تتداخل حوافه مع لون البشرة. ويمكن استخدامه تحت الفاونديشن أو فوقه بحسب أسلوبك في المكياج.\u003c/p>\u003cp>المميزات:\u003c/p>\u003cul>\u003cli>كونسيلر سائل من خط Fit Me.\u003c/li>\u003cli>الدرجة 10 كما وردت في اسم المنتج.\u003c/li>\u003cli>قطعة تطبيق تسهّل وضعه على المنطقة المطلوبة.\u003c/li>\u003cli>قوام سهل الدمج بالأصابع أو الإسفنجة.\u003c/li>\u003cli>يناسب التغطية الموضعية تحت العين وعلى العيوب.\u003c/li>\u003cli>يُستخدم قبل المكياج أو بعده بحسب أسلوبك.\u003c/li>\u003c/ul>\u003cp>لمن يناسب؟:\u003c/p>\u003cul>\u003cli>لمن تبحث عن كونسيلر لتغطية الهالات والعيوب الصغيرة.\u003c/li>\u003cli>لمن لونها يقارب الدرجات الفاتحة.\u003c/li>\u003cli>لمن تفضل التغطية الموضعية بدل توزيع المنتج على الوجه كاملاً.\u003c/li>\u003cli>لمن تحب كونسيلر سائلاً سهل الدمج.\u003c/li>\u003c/ul>\u003cp>طريقة الاستخدام:\u003c/p>\u003cp>ضعي كمية صغيرة على الهالات أو على العيب المراد تغطيته، ثم ربّتي بلطف بأطراف الأصابع أو بإسفنجة حتى يندمج. أضيفي كمية أخرى عند الحاجة فقط، وثبتي المكياج بالبودرة إذا رغبتِ. أغلقي العبوة بإحكام بعد كل استخدام.\u003c/p>\u003cp>تنبيهات:\u003c/p>\u003cp>للاستخدام الخارجي فقط. تجنبي ملامسة داخل العين. جربي الدرجة على الفك أو اليد قبل الاستخدام الواسع، وأوقفي الاستخدام عند ظهور تهيج أو حساسية.\u003c/p>\u003cp>نبذة عن العلامة التجارية:\u003c/p>\u003cp>Maybelline New York علامة مكياج أمريكية تأسست عام 1915 وتنتمي إلى مجموعة لوريال، وتقدم مستحضرات للوجه والعيون والشفاه بدرجات متنوعة.\u003c/p>\u003cp>الأسئلة الشائعة:\u003c/p>\u003cp>ما درجة هذا الكونسيلر؟\u003c/p>\u003cp>الدرجة المذكورة في اسم المنتج هي 10.\u003c/p>\u003cp>هل هو سائل أم كريمي؟\u003c/p>\u003cp>هو كونسيلر سائل يُدمج بسهولة.\u003c/p>\u003cp>أين أضعه؟\u003c/p>\u003cp>على الهالات تحت العين وعلى العيوب الصغيرة، ثم يُدمج بلطف.\u003c/p>\u003cp>هل أستخدمه قبل الفاونديشن؟\u003c/p>\u003cp>يمكن استخدامه قبل الفاونديشن أو بعده بحسب أسلوب المكياج الذي تفضلينه.\u003c/p>", "mt": "كونسيلر مايبيلين فيت مي درجة 10", "md": "كونسيلر مايبيلين فيت مي بالدرجة 10 من Maybelline New York لتغطية الهالات والعيوب الصغيرة بقوام سائل سهل الدمج. للاستخدام اليومي في السعودية.", "skus": ["MNT-30096585", "MNT-R6", "MNT-30096585"]}, {"n": 7, "barcode": "30096592", "gtin": "30096592", "price": 28, "name": "كونسيلر Maybelline New York فيت مي درجة 15", "brand": "Maybelline New York", "description": "\u003cp>كونسيلر مايبيلين فيت مي رقم 15 Maybelline New York Fit Me Concealer، كونسيلر سائل بالدرجة 15 لإخفاء مظهر الهالات والعيوب الصغيرة ضمن روتين المكياج.\u003c/p>\u003cp>\u003cbr>\u003c/p>\u003cp>معلومات المنتج:\u003c/p>\u003cul>\u003cli>الأسم | كونسيلر مايبيلين فيت مي — Maybelline Fit Me Concealer\u003c/li>\u003cli>النوع | كونسيلر سائل\u003c/li>\u003cli>الدرجة | 15\u003c/li>\u003cli>العلامة التجارية | Maybelline New York\u003c/li>\u003c/ul>\u003cp>\u003cbr>\u003c/p>\u003cp>وصف المنتج:\u003c/p>\u003cp>الدرجة 15 من كونسيلر Fit Me تمنحك خياراً إضافياً عند اختيار الدرجة الأقرب إلى لون بشرتك، فاختلاف الدرجات بين المنتجات يساعد على تقليل ظهور حدود الكونسيلر على الوجه. وهو كونسيلر سائل من Maybelline New York يُستخدم تحت العين وعلى المواضع التي تحتاج إلى تغطية.\u003c/p>\u003cp>يتميز القوام السائل بسهولة التوزيع، فتكفي كمية قليلة لتغطية منطقة صغيرة. ويمكن إدماجه بالتربيت لتجنب سحب المنتج، ثم تثبيته بالبودرة عند الرغبة بثبات أطول خلال اليوم.\u003c/p>\u003cp>المميزات:\u003c/p>\u003cul>\u003cli>كونسيلر سائل من خط Fit Me.\u003c/li>\u003cli>الدرجة 15 بحسب اسم المنتج.\u003c/li>\u003cli>قطعة تطبيق تساعد على وضع المنتج بدقة.\u003c/li>\u003cli>قوام يسهل فرده وتدرجه على البشرة.\u003c/li>\u003cli>مناسب للتغطية تحت العين والعيوب الموضعية.\u003c/li>\u003cli>يتكامل مع كريم الأساس والبودرة.\u003c/li>\u003c/ul>\u003cp>لمن يناسب؟:\u003c/p>\u003cul>\u003cli>لمن تحتاج درجة وسطى قريبة من الدرجات الفاتحة بحسب لون بشرتها.\u003c/li>\u003cli>لمن تريد إخفاء مظهر الهالات والعيوب الصغيرة.\u003c/li>\u003cli>لمن تفضل الكونسيلر السائل على الكريمي.\u003c/li>\u003cli>لمن تبحث عن كونسيلر عملي للاستخدام اليومي.\u003c/li>\u003c/ul>\u003cp>طريقة الاستخدام:\u003c/p>\u003cp>ضعي نقاطاً صغيرة تحت العين أو على العيب، ثم ربّتي بلطف بإسفنجة أو بأطراف الأصابع حتى يتساوى مع لون البشرة. ابدئي بكمية قليلة وأضيفي عند الحاجة. أغلقي العبوة جيداً بعد الاستخدام.\u003c/p>\u003cp>تنبيهات:\u003c/p>\u003cp>للاستخدام الخارجي فقط. تجنبي ملامسة العينين مباشرة، واختبري الدرجة على الفك قبل الشراء إن أمكن. أوقفي الاستخدام عند ظهور تهيج.\u003c/p>\u003cp>نبذة عن العلامة التجارية:\u003c/p>\u003cp>Maybelline New York علامة تجميل أمريكية بدأت عام 1915 وتتبع مجموعة لوريال. تضم مستحضرات للعيون والوجه والشفاه بدرجات وخطوط متعددة.\u003c/p>\u003cp>الأسئلة الشائعة:\u003c/p>\u003cp>ما درجة هذا الكونسيلر؟\u003c/p>\u003cp>الدرجة 15 كما وردت في الاسم.\u003c/p>\u003cp>هل يناسب الهالات تحت العين؟\u003c/p>\u003cp>نعم، يُستخدم على الهالات وعلى العيوب الصغيرة ويُدمج بلطف.\u003c/p>\u003cp>كيف أدمجه؟\u003c/p>\u003cp>بالتربيت بأطراف الأصابع أو بإسفنجة مكياج.\u003c/p>\u003cp>هل أحتاج إلى بودرة بعده؟\u003c/p>\u003cp>هذا اختياري، وتُستخدم البودرة إن رغبتِ بتثبيت أطول.\u003c/p>", "mt": "كونسيلر مايبيلين فيت مي درجة 15", "md": "كونسيلر مايبيلين فيت مي بالدرجة 15 من Maybelline New York لإخفاء الهالات والعيوب الصغيرة بقوام سائل سهل الدمج. اطلبيه في السعودية الآن بسهولة.", "skus": ["MNT-30096592", "MNT-R7", "MNT-30096592"]}]</script>
+<script>
+const Q=JSON.parse(document.getElementById('q').textContent),B='A001v2',SV='sallaclaude';
+const $=id=>document.getElementById(id);$('cnt').textContent='عدد المنتجات في هذه الصفحة: '+Q.length;
+let stop=false,db=null,mcp=null,redo=false;const C={updated:0,noop:0,created:0,fail:0,skipped:0};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function log(t,c){const d=document.createElement('div');d.textContent=t;if(c)d.className=c;$('log').prepend(d)}
+function chips(){$('chips').replaceChildren(...Object.entries({'محدَّث':C.updated,'بلا تغيير':C.noop,'منشأ':C.created,'سابقاً':C.skipped,'أخطاء':C.fail}).map(([k,v])=>{const s=document.createElement('span');s.className='chip';s.textContent=k+' '+v;return s}))}
+function find(o,k){if(!o||typeof o!=='object')return;if(k in o)return o[k];for(const v of Object.values(o)){const r=find(v,k);if(r!==undefined)return r}}
+async function call(tool,input){const r=await mcp.callTool(SV,tool,input,{cache:false});let p=r.payload??r.structuredContent;if(p===undefined){const t=(r.content||[]).find(b=>b.type==='text');if(t){try{p=JSON.parse(t.text)}catch{p=t.text}}}return p}
+const digits=s=>String(s||'').replace(/\D/g,'');
+async function lookup(x){
+  const seen=new Map();
+  for(const kw of [x.barcode,'MNT-R'+x.n]){
+    const r=await call('products_list',{keyword:kw,per_page:10});
+    for(const p of (find(r,'data')||[])){seen.set(p.id,p)}
+    const hit=[...seen.values()].find(p=>x.skus.includes(p.sku)||(digits(p.gtin)&&digits(p.gtin).replace(/^0+/,'')===x.barcode.replace(/^0+/,'')));
+    if(hit)return hit;
+  }
+  return null;
+}
+function diff(x,p){
+  const u={},ch=[];
+  if(p.name!==x.name){u.name=x.name;ch.push('name')}
+  if((p.description||'')!==x.description){u.description=x.description;ch.push('description')}
+  const m=p.metadata||{};
+  if((m.title||'')!==x.mt){u.metadata_title=x.mt;ch.push('metadata_title')}
+  if((m.description||'')!==x.md){u.metadata_description=x.md;ch.push('metadata_description')}
+  const pr=p.price&&typeof p.price==='object'?p.price.amount:p.price;
+  if(Number(pr)!==x.price){u.price=x.price;ch.push('price')}
+  if(x.gtin&&p.gtin!==x.gtin){u.gtin=x.gtin;ch.push('gtin')}
+  return {u,ch,oldPrice:pr};
+}
+async function one(x){
+  const ref=db.doc('sync'+B+'/n'+x.n);const snap=await ref.get();const st=snap.exists?snap.data():{};
+  if(st.done&&!(redo&&st.error))return 'skip';
+  let p=await lookup(x),res={n:x.n,name:x.name,at:Date.now()};
+  if(p){
+    const {u,ch,oldPrice}=diff(x,p);res.id=p.id;res.found='store';res.oldPrice=oldPrice;res.newPrice=x.price;res.hasImage=!!(p.thumbnail||p.main_image);res.brand=(p.brand&&p.brand.name)||'';
+    if(!ch.length){res.result='noop';res.changed=[]}
+    else{
+      let chx=ch.slice(),ux={...u};
+      for(let attempt=0;attempt<2;attempt++){
+        try{
+          const pr=await call('products_update_propose',{product:p.id,update:chx,...ux});
+          const tok=find(pr,'confirm_token');
+          if(!tok){if(JSON.stringify(pr).includes('No-op')||JSON.stringify(pr).includes('unchanged')){res.result='noop';res.changed=[]}else throw new Error('no token: '+JSON.stringify(pr).slice(0,200))}
+          else{
+            const ap=await call('products_update_apply',{product_id:p.id,confirm_token:tok});
+            const d=find(ap,'data')||{};const pn=d.price&&d.price.amount!==undefined?d.price.amount:d.price;
+            const okName=!ux.name||d.name===ux.name,okPrice=!ux.price||Number(pn)===x.price;
+            res.changed=chx;res.verified=okName&&okPrice;res.result=res.verified?'updated':'updated-unverified';
+          }
+          break;
+        }catch(e){
+          const m=String((e&&e.message)||e);
+          if(attempt===0&&chx.includes('gtin')&&/gtin/i.test(m)){chx=chx.filter(k=>k!=='gtin');delete ux.gtin;res.gtinDuplicate=true;
+            if(!chx.length){res.result='noop';res.changed=[];break}continue}
+          throw e;
+        }
+      }
+    }
+  }else{
+    const set=['description','categories','weight','weight_type','require_shipping','quantity','metadata_title','metadata_description','sku','status'];
+    const inp={name:x.name,price:x.price,product_type:'product',sku:'MNT-'+x.barcode.replace(/^0+/,''),description:x.description,weight:500,weight_type:'g',require_shipping:true,quantity:0,metadata_title:x.mt,metadata_description:x.md,status:'hidden',set};
+    if(x.gtin){inp.gtin=x.gtin;set.push('gtin')}
+    const r=await call('products_create',inp);const id=find(r,'id');if(!id)throw new Error('create: '+JSON.stringify(r).slice(0,300));
+    res.id=Number(id);res.found='created';res.result='created';res.changed=['all'];res.hasImage=false;res.newPrice=x.price;
+  }
+  await ref.set({...res,done:true});return res.result;
+}
+async function run(){
+  $('go').disabled=true;$('stop').disabled=false;stop=false;
+  try{db=await claude.use('db');mcp=await claude.use('mcp')}catch(e){}
+  if(!db||!mcp){log('الصفحة لا تصل إلى سلة أو إلى الحفظ. افتحها من claude.ai وأنت مسجّل الدخول.','bad');$('go').disabled=false;return}
+  for(let i=0;i<Q.length&&!stop;i++){
+    const x=Q[i];$('pb').style.width=((i+1)/Q.length*100)+'%';$('st').textContent=(i+1)+' / '+Q.length;
+    try{const r=await one(x);
+      if(r==='skip')C.skipped++;else if(r==='noop'){C.noop++;log('= '+x.n+' بلا تغيير: '+x.name)}else if(r==='created'){C.created++;log('+ '+x.n+' أُنشئ: '+x.name,'ok')}else{C.updated++;log((r==='updated'?'✓ ':'؟ ')+x.n+' '+x.name,r==='updated'?'ok':'warn')}}
+    catch(e){C.fail++;const m=(e&&(e.code?e.code+': ':'')+(e.message||e))||'';log('✗ '+x.n+' '+x.name+' — '+m,'bad');
+      try{const ref=db.doc('sync'+B+'/n'+x.n);const s=await ref.get();await ref.set({...(s.exists?s.data():{n:x.n,name:x.name}),error:String(m).slice(0,300),done:false})}catch{}
+      if(e&&['not_granted','needs_reauth','server_not_connected','consent_required','capability_disabled'].includes(e.code)){log('توقف: يلزم منح الإذن لموصل سلة.','warn');break}
+      if(e&&e.code==='rate_limited'){await sleep(e.retryAfterMs||20000);i--;C.fail--;continue}}
+    chips();await sleep(300);
+  }
+  $('st').textContent='انتهى: محدَّث '+C.updated+' · بلا تغيير '+C.noop+' · منشأ '+C.created+' · سابقاً '+C.skipped+' · أخطاء '+C.fail+' من '+Q.length;chips();
+  $('go').disabled=false;$('stop').disabled=true;
+}
+$('go').addEventListener('click',()=>{redo=false;run()});
+$('redo').addEventListener('click',()=>{redo=true;run()});
+$('stop').addEventListener('click',()=>{stop=true;$('stop').disabled=true;log('سيتوقف بعد المنتج الحالي.','warn')});
+chips();
+</script>
