@@ -1,5 +1,6 @@
 """Rotate/trim sentences repeated in 3+ A003 products. usage: python3 product_audit/tools/vary_A003.py"""
 import json,glob,re,collections,sys
+BATCH=sys.argv[1] if len(sys.argv)>1 else 'A003'
 sys.path.insert(0,'product_audit/tools')
 from render_desc import check
 R={
@@ -10,7 +11,7 @@ R={
 "إن شعرتِ بأي انزعاج توقفي عن الاستخدام.":["إذا أحسستِ بانزعاج فتوقفي عن الاستعمال.","عند أي إحساس بعدم الراحة أوقفي الاستخدام."],
 }
 c=collections.Counter()
-files=sorted(glob.glob('product_audit/batches_v2/A003_in_*.out.json'))
+files=sorted(glob.glob('product_audit/batches_v2/'+BATCH+'_in_*.out.json'))
 data={f:json.load(open(f)) for f in files}
 def sents(t): return [s.strip() for s in re.split(r'(?<=[.،])\s|</p>|</li>|\n',re.sub(r'<[^>]+>','\n',t)) if len(s.strip())>30]
 for d in data.values():
