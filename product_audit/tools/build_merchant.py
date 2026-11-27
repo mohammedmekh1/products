@@ -30,7 +30,7 @@ for f in sorted(files):
         r=idx[x['n']]; s=res.get(x['n'],{})
         gt=r['gtin']; 
         rows.append(dict(n=x['n'],id='MNT-'+r['barcode'].lstrip('0') if not r['sku'].startswith('MNT-R') else r['sku'],title=x['name'],description=x['merchant'],link=s.get('url',''),image_link=s.get('image',''),additional_image_link='',
-          price=f"{r['target_price']} SAR",availability='out_of_stock',condition='new',brand=x.get('brand',''),gtin=gt,mpn='',identifier_exists='yes' if gt else 'no',
+          price=f"{r['target_price']} SAR",availability='in_stock',condition='new',brand=x.get('brand',''),gtin=gt,mpn='',identifier_exists='yes' if gt else 'no',
           google_product_category=gpc(x['name']),product_type=cat.get(x['n'],'').replace(' > ',' > '),salla_id=s.get('id',''),
           review_note='; '.join(filter(None,[ 'link missing (run sync)' if not s.get('url') else '', 'image missing' if not s.get('image') else '', 'gtin duplicate in store' if s.get('gtinDuplicate') else '']))))
 os.makedirs('product_audit/merchant',exist_ok=True)

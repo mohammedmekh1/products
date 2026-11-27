@@ -62,6 +62,7 @@ function diff(x,p){
   if((m.description||'')!==x.md){u.metadata_description=x.md;ch.push('metadata_description')}
   const pr=p.price&&typeof p.price==='object'?p.price.amount:p.price;
   if(Number(pr)!==x.price){u.price=x.price;ch.push('price')}
+  if(Number(p.quantity)!==x.qty){u.quantity=x.qty;ch.push('quantity')}
   if(x.gtin&&p.gtin!==x.gtin){u.gtin=x.gtin;ch.push('gtin')}
   return {u,ch,oldPrice:pr};
 }
@@ -96,7 +97,7 @@ async function one(x){
     }
   }else{
     const set=['description','categories','weight','weight_type','require_shipping','quantity','metadata_title','metadata_description','sku','status'];
-    const inp={name:x.name,price:x.price,product_type:'product',sku:'MNT-'+x.barcode.replace(/^0+/,''),description:x.description,weight:500,weight_type:'g',require_shipping:true,quantity:0,metadata_title:x.mt,metadata_description:x.md,status:'hidden',set};
+    const inp={name:x.name,price:x.price,product_type:'product',sku:'MNT-'+x.barcode.replace(/^0+/,''),description:x.description,weight:500,weight_type:'g',require_shipping:true,quantity:x.qty,metadata_title:x.mt,metadata_description:x.md,status:'hidden',set};
     if(x.gtin){inp.gtin=x.gtin;set.push('gtin')}
     const r=await call('products_create',inp);const id=find(r,'id');if(!id)throw new Error('create: '+JSON.stringify(r).slice(0,300));
     res.id=Number(id);res.found='created';res.result='created';res.changed=['all'];res.hasImage=false;res.newPrice=x.price;
