@@ -63,3 +63,11 @@
 - ضعف تحقق: 104 Red Fox، 149 Dax، 113 Got2b (Amazon يخالف الموزعين).
 - صفحات منشورة: مزامنة A001 https://claude.ai/artifact/A1gB4EFpzKBLS3yiZ99h4R (v8)، مزامنة A002 https://claude.ai/artifact/PkKf7twY4DAtgPJRV5AX1x (v3)، تقرير A001 https://claude.ai/artifact/VYyTtBJQUpENQjr5YBdP37، تقرير A002 https://claude.ai/artifact/HUW83PbHtmaFPGmkDEA396. لم يُرفع شيء إلى سلة.
 - التالي: A003 (401-600): بناء inputs/A003_in_01..10 ثم الوكلاء كما في A002.
+
+## A003 (401-600) عبر الوكلاء (2026-11-27)
+- **138 مكتوباً و62 متخطى**، كلها تجتاز render_desc. ملفات batches_v2/A003_in_01..10. ميرشنت merchant/MERCHANT_A003.csv (138) والتراكمي 485. تنويع بـ tools/vary_A003.py (80 استبدالاً، 348 حذفاً).
+- صفحة المزامنة: https://claude.ai/artifact/Hy3yYpNGW9ShWDyc9VdaRv ، التقرير: https://claude.ai/artifact/3U1HV44tmeFBn1uCjckpdi. لم يُرفع شيء إلى سلة.
+- المتخطى: معظمه منتجات حب شباب/تفتيح بادعاء علاجي، وباركودات داخلية (Kuwait Shop 441-454، Arganmidas مطابقة بالاسم)، وأسماء Fenty المقطوعة. التفاصيل في stats_A003.json.
+- تحقق ضعيف: Arganmidas 434-438، Garnier 464-474 (قالب موحد)، Vichy 479-482/498، Mielle/Camille Rose/Cantu (طرف ثالث)، 522/528 (مدة الفعالية متعارضة).
+- لا منتجات EXA في A003 (401-600).
+- التالي: A004 (601-800): inputs/A004_in_01..10 ثم الوكلاء.
