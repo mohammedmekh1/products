@@ -1,0 +1,115 @@
+<title>مزامنة دفعة __BATCH__</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: single column work log; palette: cool paper + teal ink */
+:root{--bg:#f2f5f6;--card:#fff;--fg:#17242a;--muted:#587078;--accent:#0b6e7a;--on-accent:#fff;--line:#d9e2e5;--ok:#1b7f4a;--bad:#b3261e;--warn:#955f00;--chip:#e7eff1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a1e;--card:#172429;--fg:#e4eef1;--muted:#93aab1;--accent:#4cc3d1;--on-accent:#06262b;--line:#27393f;--ok:#62d492;--bad:#ff8f86;--warn:#e6b955;--chip:#1f3238;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a1e;--card:#172429;--fg:#e4eef1;--muted:#93aab1;--accent:#4cc3d1;--on-accent:#06262b;--line:#27393f;--ok:#62d492;--bad:#ff8f86;--warn:#e6b955;--chip:#1f3238;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:Tahoma,system-ui,sans-serif;direction:rtl;padding-block:28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:760px;margin:0 auto;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:12px;min-width:0}
+h1{font-size:20px;margin:0}p{margin:0;color:var(--muted);line-height:1.8}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+button{font:inherit;font-size:15px;background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;padding:10px 16px;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}button.sec{background:transparent;color:var(--fg);border:1px solid var(--line)}
+button:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--accent);width:0}
+.stats{font-variant-numeric:tabular-nums;color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:var(--chip);border-radius:999px;padding:4px 12px;font-size:13px;font-variant-numeric:tabular-nums}
+#log{max-height:440px;overflow:auto;font-size:13px;line-height:1.7;display:grid;gap:2px;min-width:0}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+</style>
+<main>
+<div class="card">
+<h1>مزامنة منتجات الدفعة __BATCH__ مع سلة</h1>
+<p>لكل منتج: تبحث الصفحة عنه في المتجر بالباركود ثم بالـSKU. إن وُجد، تحدّث فقط الحقول المختلفة (الاسم، الوصف، ميتا، السعر = الأصلي × 1.45، GTIN المصحَّح) عبر معاينة ثم تطبيق، ثم تتحقق من النتيجة. إن لم يوجد، تنشئه بحالة مخفي. لا تحذف شيئاً ولا تغيّر الحالة ولا الكمية. المنتج المكتمل لا يُعاد، فيمكن الإيقاف والمتابعة بأمان. سيطلب المتصفح إذن موصل سلة عند أول تشغيل.</p>
+<p id="cnt"></p>
+<div class="row"><button id="go" type="button">ابدأ المزامنة</button><button id="stop" type="button" class="sec" disabled>إيقاف</button><button id="redo" type="button" class="sec">إعادة المنتجات التي فشلت</button></div>
+<div class="bar"><i id="pb"></i></div>
+<div class="stats" id="st">جاهز.</div>
+<div class="chips" id="chips"></div>
+</div>
+<div class="card"><div id="log"></div></div>
+</main>
+<script type="application/json" id="q">__DATA__</script>
+<script>
+const Q=JSON.parse(document.getElementById('q').textContent),B='__BATCH__',SV='sallaclaude';
+const $=id=>document.getElementById(id);$('cnt').textContent='عدد المنتجات في هذه الصفحة: '+Q.length;
+let stop=false,db=null,mcp=null,redo=false;const C={updated:0,noop:0,created:0,fail:0,skipped:0};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function log(t,c){const d=document.createElement('div');d.textContent=t;if(c)d.className=c;$('log').prepend(d)}
+function chips(){$('chips').replaceChildren(...Object.entries({'محدَّث':C.updated,'بلا تغيير':C.noop,'منشأ':C.created,'سابقاً':C.skipped,'أخطاء':C.fail}).map(([k,v])=>{const s=document.createElement('span');s.className='chip';s.textContent=k+' '+v;return s}))}
+function find(o,k){if(!o||typeof o!=='object')return;if(k in o)return o[k];for(const v of Object.values(o)){const r=find(v,k);if(r!==undefined)return r}}
+async function call(tool,input){const r=await mcp.callTool(SV,tool,input,{cache:false});let p=r.payload??r.structuredContent;if(p===undefined){const t=(r.content||[]).find(b=>b.type==='text');if(t){try{p=JSON.parse(t.text)}catch{p=t.text}}}return p}
+const digits=s=>String(s||'').replace(/\D/g,'');
+async function lookup(x){
+  const seen=new Map();
+  for(const kw of [x.barcode,'MNT-R'+x.n]){
+    const r=await call('products_list',{keyword:kw,per_page:10});
+    for(const p of (find(r,'data')||[])){seen.set(p.id,p)}
+    const hit=[...seen.values()].find(p=>x.skus.includes(p.sku)||(digits(p.gtin)&&digits(p.gtin).replace(/^0+/,'')===x.barcode.replace(/^0+/,'')));
+    if(hit)return hit;
+  }
+  return null;
+}
+function diff(x,p){
+  const u={},ch=[];
+  if(p.name!==x.name){u.name=x.name;ch.push('name')}
+  if((p.description||'')!==x.description){u.description=x.description;ch.push('description')}
+  const m=p.metadata||{};
+  if((m.title||'')!==x.mt){u.metadata_title=x.mt;ch.push('metadata_title')}
+  if((m.description||'')!==x.md){u.metadata_description=x.md;ch.push('metadata_description')}
+  const pr=p.price&&typeof p.price==='object'?p.price.amount:p.price;
+  if(Number(pr)!==x.price){u.price=x.price;ch.push('price')}
+  if(x.gtin&&p.gtin!==x.gtin){u.gtin=x.gtin;ch.push('gtin')}
+  return {u,ch,oldPrice:pr};
+}
+async function one(x){
+  const ref=db.doc('sync'+B+'/n'+x.n);const snap=await ref.get();const st=snap.exists?snap.data():{};
+  if(st.done&&!(redo&&st.error))return 'skip';
+  let p=await lookup(x),res={n:x.n,name:x.name,at:Date.now()};
+  if(p){
+    const {u,ch,oldPrice}=diff(x,p);res.id=p.id;res.found='store';res.oldPrice=oldPrice;res.newPrice=x.price;res.hasImage=!!(p.thumbnail||p.main_image);res.brand=(p.brand&&p.brand.name)||'';
+    if(!ch.length){res.result='noop';res.changed=[]}
+    else{
+      const pr=await call('products_update_propose',{product:p.id,update:ch,...u});
+      const tok=find(pr,'confirm_token');
+      if(!tok){if(JSON.stringify(pr).includes('No-op')||JSON.stringify(pr).includes('unchanged')){res.result='noop';res.changed=[]}else throw new Error('no token: '+JSON.stringify(pr).slice(0,200))}
+      else{
+        const ap=await call('products_update_apply',{product_id:p.id,confirm_token:tok});
+        const d=find(ap,'data')||{};const pn=d.price&&d.price.amount!==undefined?d.price.amount:d.price;
+        const okName=!u.name||d.name===u.name,okPrice=!u.price||Number(pn)===x.price;
+        res.changed=ch;res.verified=okName&&okPrice;res.result=res.verified?'updated':'updated-unverified';
+      }
+    }
+  }else{
+    const set=['description','categories','weight','weight_type','require_shipping','quantity','metadata_title','metadata_description','sku','status'];
+    const inp={name:x.name,price:x.price,product_type:'product',sku:'MNT-'+x.barcode.replace(/^0+/,''),description:x.description,weight:500,weight_type:'g',require_shipping:true,quantity:0,metadata_title:x.mt,metadata_description:x.md,status:'hidden',set};
+    if(x.gtin){inp.gtin=x.gtin;set.push('gtin')}
+    const r=await call('products_create',inp);const id=find(r,'id');if(!id)throw new Error('create: '+JSON.stringify(r).slice(0,300));
+    res.id=Number(id);res.found='created';res.result='created';res.changed=['all'];res.hasImage=false;res.newPrice=x.price;
+  }
+  await ref.set({...res,done:true});return res.result;
+}
+async function run(){
+  $('go').disabled=true;$('stop').disabled=false;stop=false;
+  try{db=await claude.use('db');mcp=await claude.use('mcp')}catch(e){}
+  if(!db||!mcp){log('الصفحة لا تصل إلى سلة أو إلى الحفظ. افتحها من claude.ai وأنت مسجّل الدخول.','bad');$('go').disabled=false;return}
+  for(let i=0;i<Q.length&&!stop;i++){
+    const x=Q[i];$('pb').style.width=((i+1)/Q.length*100)+'%';$('st').textContent=(i+1)+' / '+Q.length;
+    try{const r=await one(x);
+      if(r==='skip')C.skipped++;else if(r==='noop'){C.noop++;log('= '+x.n+' بلا تغيير: '+x.name)}else if(r==='created'){C.created++;log('+ '+x.n+' أُنشئ: '+x.name,'ok')}else{C.updated++;log((r==='updated'?'✓ ':'؟ ')+x.n+' '+x.name,r==='updated'?'ok':'warn')}}
+    catch(e){C.fail++;const m=(e&&(e.code?e.code+': ':'')+(e.message||e))||'';log('✗ '+x.n+' '+x.name+' — '+m,'bad');
+      try{const ref=db.doc('sync'+B+'/n'+x.n);const s=await ref.get();await ref.set({...(s.exists?s.data():{n:x.n,name:x.name}),error:String(m).slice(0,300),done:false})}catch{}
+      if(e&&['not_granted','needs_reauth','server_not_connected','consent_required','capability_disabled'].includes(e.code)){log('توقف: يلزم منح الإذن لموصل سلة.','warn');break}
+      if(e&&e.code==='rate_limited'){await sleep(e.retryAfterMs||20000);i--;C.fail--;continue}}
+    chips();await sleep(300);
+  }
+  $('st').textContent='انتهى: محدَّث '+C.updated+' · بلا تغيير '+C.noop+' · منشأ '+C.created+' · سابقاً '+C.skipped+' · أخطاء '+C.fail+' من '+Q.length;chips();
+  $('go').disabled=false;$('stop').disabled=true;
+}
+$('go').addEventListener('click',()=>{redo=false;run()});
+$('redo').addEventListener('click',()=>{redo=true;run()});
+$('stop').addEventListener('click',()=>{stop=true;$('stop').disabled=true;log('سيتوقف بعد المنتج الحالي.','warn')});
+chips();
+</script>

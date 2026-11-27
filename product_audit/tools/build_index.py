@@ -8,6 +8,13 @@ def gtin_ok(s):
     d=[int(c) for c in s]; chk=d.pop()
     tot=sum(x*(3 if i%2==0 else 1) for i,x in enumerate(reversed(d)))
     return (10-tot%10)%10==chk
+def gtin_fix(s):
+    s=re.sub(r'\D','',str(s))
+    for t in (8,12,13,14):
+        if t>=len(s) and t-len(s)<=2:
+            z=s.zfill(t)
+            if gtin_ok(z): return z
+    return ''
 def norm(s): return re.sub(r'\s+',' ',str(s or '')).strip()
 inv=list(openpyxl.load_workbook(R+'مخزون محل جديد.xlsx',read_only=True).active.iter_rows(values_only=True))[1:]
 # batch rows keyed by sku
@@ -25,7 +32,7 @@ for n,(bc,name,price,qty) in enumerate(inv,1):
     if sku: used.add(sku)
     p=float(price) if price not in (None,'') else None
     rows.append(dict(n=n,barcode=bc,name=norm(name),orig_price=p,qty=qty,target_price=(round(p*1.45) if p is not None else ''),
-      gtin_valid=int(gtin_ok(bc)),sku=sku or '',batch=(b[0] if b else (6+(n-1301)//150 if n>1300 else 'excluded')),
+      gtin_valid=int(gtin_ok(bc)),gtin=gtin_fix(bc),sku=sku or '',batch=(b[0] if b else (6+(n-1301)//150 if n>1300 else 'excluded')),
       batch_price=(b[2] if b else ''),range='old' if n<=1300 else 'new'))
 for r in rows:
     r['price_matches']= '' if r['batch_price']=='' else int(abs(float(r['batch_price'])-float(r['target_price']))<=1)
