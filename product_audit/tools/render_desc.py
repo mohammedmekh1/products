@@ -28,6 +28,8 @@ def check(x):
         m=BAD.search(re.sub('<[^>]+>','',x[k]))
         if m: pr.append(f'{k}:{m.group()}')
     if re.search(r'<|https?://|@',x['merchant']): pr.append('merchant-markup')
+    im=x.get('images',[])
+    if len(im)>5 or any(not str(u).startswith('https://') for u in im): pr.append('images')
     return pr
 if __name__=='__main__':
     src,dst=sys.argv[1],sys.argv[2]

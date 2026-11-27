@@ -102,6 +102,13 @@ async function one(x){
     const r=await call('products_create',inp);const id=find(r,'id');if(!id)throw new Error('create: '+JSON.stringify(r).slice(0,300));
     res.id=Number(id);res.found='created';res.result='created';res.changed=['all'];res.hasImage=false;res.newPrice=x.price;
   }
+  if(x.images&&x.images.length&&res.id){
+    let have=Number(st.imgsAdded||0);res.imgsAdded=have;
+    for(let i=have;i<x.images.length;i++){
+      try{await call('product_image_add',{product:res.id,image_url:x.images[i],alt:(x.alt||x.name).slice(0,200),main:false,sort:i+1});res.imgsAdded=i+1}
+      catch(e){res.imgError=String((e&&e.message)||e).slice(0,200);break}
+    }
+  }
   await wr(()=>ref.set({...res,done:true}));return res.result;
 }
 async function run(){

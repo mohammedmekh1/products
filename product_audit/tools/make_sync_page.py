@@ -11,7 +11,7 @@ for f in files:
         if x['n'] in skip: continue
         r=idx[x['n']]
         qty=20 if int(r['target_price'])<=50 else 10
-        items.append(dict(qty=qty,n=x['n'],barcode=r['barcode'],gtin=r['gtin'],price=int(r['target_price']),name=x['name'],brand=x.get('brand',''),
+        items.append(dict(images=[u for u in x.get('images',[]) if str(u).startswith('https://')][:5],alt=x.get('alt',''),qty=qty,n=x['n'],barcode=r['barcode'],gtin=r['gtin'],price=int(r['target_price']),name=x['name'],brand=x.get('brand',''),
           description=x['d'],mt=x['mt'],md=x['md'],skus=[ 'MNT-'+r['barcode'], 'MNT-R%d'%x['n'], r['sku'] ]))
 items.sort(key=lambda i:i['n'])
 data=json.dumps(items,ensure_ascii=False).replace('<','\\u003c')
