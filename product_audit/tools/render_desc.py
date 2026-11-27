@@ -31,7 +31,7 @@ def check(x):
     return pr
 if __name__=='__main__':
     src,dst=sys.argv[1],sys.argv[2]
-    d=json.load(open(src)); bad=0
+    d=[x for x in json.load(open(src)) if 'skip' not in x]; bad=0
     for x in d:
         x['d']=render(x); x['mt']=x['seo_t']; x['md']=x['seo_d']
         pr=check(x)
