@@ -72,14 +72,25 @@ async function one(x){
     const {u,ch,oldPrice}=diff(x,p);res.id=p.id;res.found='store';res.oldPrice=oldPrice;res.newPrice=x.price;res.hasImage=!!(p.thumbnail||p.main_image);res.brand=(p.brand&&p.brand.name)||'';
     if(!ch.length){res.result='noop';res.changed=[]}
     else{
-      const pr=await call('products_update_propose',{product:p.id,update:ch,...u});
-      const tok=find(pr,'confirm_token');
-      if(!tok){if(JSON.stringify(pr).includes('No-op')||JSON.stringify(pr).includes('unchanged')){res.result='noop';res.changed=[]}else throw new Error('no token: '+JSON.stringify(pr).slice(0,200))}
-      else{
-        const ap=await call('products_update_apply',{product_id:p.id,confirm_token:tok});
-        const d=find(ap,'data')||{};const pn=d.price&&d.price.amount!==undefined?d.price.amount:d.price;
-        const okName=!u.name||d.name===u.name,okPrice=!u.price||Number(pn)===x.price;
-        res.changed=ch;res.verified=okName&&okPrice;res.result=res.verified?'updated':'updated-unverified';
+      let chx=ch.slice(),ux={...u};
+      for(let attempt=0;attempt<2;attempt++){
+        try{
+          const pr=await call('products_update_propose',{product:p.id,update:chx,...ux});
+          const tok=find(pr,'confirm_token');
+          if(!tok){if(JSON.stringify(pr).includes('No-op')||JSON.stringify(pr).includes('unchanged')){res.result='noop';res.changed=[]}else throw new Error('no token: '+JSON.stringify(pr).slice(0,200))}
+          else{
+            const ap=await call('products_update_apply',{product_id:p.id,confirm_token:tok});
+            const d=find(ap,'data')||{};const pn=d.price&&d.price.amount!==undefined?d.price.amount:d.price;
+            const okName=!ux.name||d.name===ux.name,okPrice=!ux.price||Number(pn)===x.price;
+            res.changed=chx;res.verified=okName&&okPrice;res.result=res.verified?'updated':'updated-unverified';
+          }
+          break;
+        }catch(e){
+          const m=String((e&&e.message)||e);
+          if(attempt===0&&chx.includes('gtin')&&/gtin/i.test(m)){chx=chx.filter(k=>k!=='gtin');delete ux.gtin;res.gtinDuplicate=true;
+            if(!chx.length){res.result='noop';res.changed=[];break}continue}
+          throw e;
+        }
       }
     }
   }else{
