@@ -1,0 +1,132 @@
+<title>دليل مشروع مونتنيرو</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: single reading column with sticky chapter chips; palette: warm paper + deep green ink */
+:root{--bg:#f5f3ee;--card:#fff;--fg:#1d2420;--muted:#5d6a63;--accent:#1f6b4f;--on-accent:#fff;--line:#dedbd2;--chip:#e9efe9;--ok:#1b7f4a;--warn:#955f00;--bad:#b3261e;--code:#eef1ec}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121815;--card:#1a221e;--fg:#e6ece8;--muted:#9aa9a1;--accent:#5fcf9f;--on-accent:#06251a;--line:#2a3530;--chip:#212c26;--ok:#62d492;--warn:#e6b955;--bad:#ff8f86;--code:#202b25;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121815;--card:#1a221e;--fg:#e6ece8;--muted:#9aa9a1;--accent:#5fcf9f;--on-accent:#06251a;--line:#2a3530;--chip:#212c26;--ok:#62d492;--warn:#e6b955;--bad:#ff8f86;--code:#202b25;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:Tahoma,system-ui,sans-serif;direction:rtl;line-height:1.9;padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:820px;margin:0 auto;display:grid;gap:16px}
+nav{display:flex;flex-wrap:wrap;gap:8px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:8px;z-index:5}
+nav a{background:var(--chip);color:var(--fg);text-decoration:none;border-radius:999px;padding:3px 12px;font-size:13px}
+nav a:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:10px;min-width:0;scroll-margin-top:60px}
+h1{font-size:23px;margin:0}h2{font-size:18px;margin:0}h3{font-size:15px;margin:6px 0 0}p{margin:0}ul,ol{margin:0;padding-inline-start:22px;display:grid;gap:4px}
+.muted{color:var(--muted)}
+.cmd{position:relative;background:var(--code);border:1px solid var(--line);border-radius:8px;padding:10px 12px;direction:ltr;text-align:left;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;white-space:pre-wrap;overflow-x:auto}
+.cmd.ar{direction:rtl;text-align:right;font-family:Tahoma,system-ui,sans-serif}
+.row{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}.row .cmd{flex:1;min-width:0}
+button{font:inherit;font-size:13px;background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;padding:6px 12px;cursor:pointer}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13.5px}th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:right;vertical-align:top}th{background:var(--chip)}
+.st{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12px;background:var(--chip)}.done{color:var(--ok)}.prog{color:var(--warn)}.todo{color:var(--muted)}
+code{background:var(--code);border-radius:4px;padding:0 5px;font-size:12.5px;direction:ltr;unicode-bidi:embed}
+a.ext{color:var(--accent)}
+</style>
+<main>
+<header><h1>دليل مشروع مونتنيرو: بناء المنتجات ورفعها</h1><p class="muted">مرجع للاستخدام والمهام. آخر تحديث: 27 نوفمبر 2026.</p></header>
+<nav aria-label="الفصول"><a href="#a">الوضع الحالي</a><a href="#b">القواعد</a><a href="#c">الروابط</a><a href="#d">الطرفية</a><a href="#e">سير الدفعة</a><a href="#f">المهام</a><a href="#g">المشاكل</a><a href="#h">الملفات</a></nav>
+
+<section id="a"><h2>1. الوضع الحالي</h2>
+<ul>
+<li>ملف المخزون «مخزون محل جديد»: <b>2282 منتجاً</b> (ليس 2700)، تُبنى على <b>12 دفعة</b> من 200 (الأخيرة 82).</li>
+<li>المنتجات 1 إلى 1300 رُفعت سابقاً بأوصاف قديمة، وتُستبدل دفعة دفعة بالأسلوب المعتمد.</li>
+<li><b>الدفعة A001 (1 إلى 200):</b> مكتوب ومراجع <b>154 منتجاً</b>، والمعلق 35 للبحث بالباركود، و11 مستثنى من الدفعات القديمة. صفحة المزامنة جاهزة وتنتظر تشغيلك.</li>
+<li><b>الدفعة A002 (201 إلى 400):</b> لم تبدأ (أُوقف الوكلاء). منتجات «اكسا» (باركود يبدأ بـ 745604) تحتاج بحثاً بالباركود.</li>
+<li>بيوتي1: 4390 صفاً، لم تبدأ مراجعته بالأسلوب الجديد. التصنيفات والماركات: ملف الخطة لم يُكتب بعد.</li>
+</ul></section>
+
+<section id="b"><h2>2. القواعد المعتمدة</h2>
+<div class="tw"><table><thead><tr><th>البند</th><th>القاعدة</th></tr></thead><tbody>
+<tr><td>السعر</td><td>الأصلي × 1.45 مقرباً لأقرب ريال (العمود target_price في الفهرس). لا تضف 15% لأن سلة تضيفها.</td></tr>
+<tr><td>الكمية</td><td>20 إذا السعر النهائي ≤ 50 ريالاً، وإلا 10. تُحدَّث عبر صفحة المزامنة.</td></tr>
+<tr><td>الحالة</td><td>تبقى «مخفي» حتى تقرر النشر.</td></tr>
+<tr><td>الباركود</td><td>يُكتب GTIN المصحح (الصفر المفقود يُعاد) في 2265 من 2282. باركودان مكرران في المخزون: 72140025649 و77043104736.</td></tr>
+<tr><td>وصف المتجر</td><td>1800 إلى 3000 حرف بالبنية المعتمدة (عيّنة المالك): تعريف، معلومات المنتج، وصف، مميزات، لمن يناسب، استخدام، تنبيهات، نبذة الماركة، 4 أسئلة. معلومة ناقصة تُحذف بصمت.</td></tr>
+<tr><td>ميرشنت</td><td>وصف نص عادي 500 إلى 1000 حرف، منفصل عن وصف المتجر، وملف CSV لكل دفعة وتراكمي.</td></tr>
+<tr><td>SEO</td><td>عنوان أقل من 60 حرفاً، ووصف 140 إلى 155 حرفاً، فريدان.</td></tr>
+<tr><td>الصور</td><td>عبوة المنتج المطابق فقط، 800×800 فأكثر، حتى 5 صور إضافية، بلا شعارات ولا أشخاص ولا قبل/بعد.</td></tr>
+<tr><td>التحقق</td><td>لا اختلاق: اسم درجة أو حجم أو مكوّن لا يُكتب إلا بمصدر.</td></tr>
+</tbody></table></div></section>
+
+<section id="c"><h2>3. الروابط</h2>
+<ul>
+<li><a class="ext" href="https://claude.ai/artifact/A1gB4EFpzKBLS3yiZ99h4R">صفحة مزامنة A001</a>: افتحها من claude.ai واضغط «ابدأ المزامنة». تحدّث الموجود وتنشئ الناقص مخفياً وتحفظ النتيجة.</li>
+<li><a class="ext" href="https://claude.ai/artifact/PkKf7twY4DAtgPJRV5AX1x">صفحة مزامنة A002</a>: فارغة حالياً.</li>
+<li><a class="ext" href="https://claude.ai/artifact/VYyTtBJQUpENQjr5YBdP37">تقرير A001</a> (قديم، يحتاج تحديثاً بعد التشغيل).</li>
+<li>المستودع: <code>mohammedmekh1/products</code>، الفرع <code>claude/adoring-darwin-2ctyd2</code>، المجلد <code>product_audit/</code>.</li>
+</ul></section>
+
+<section id="d"><h2>4. تشغيل Claude Code في الطرفية</h2>
+<h3>أول مرة (المجلد الجديد)</h3>
+<div class="row"><div class="cmd" id="c1">cd ~/montnero-store
+git pull
+claude</div><button type="button" data-t="c1">نسخ</button></div>
+<h3>الرسالة الأولى (جرد الأدوات)</h3>
+<div class="row"><div class="cmd ar" id="c2">اقرأ product_audit/TERMINAL_PROMPT.md ونفّذه حرفياً. ابدأ بالخطوة 0: اجرد كل الأدوات والمهارات والإضافات والموصلات المتاحة لك وأخبرني بها، ثم انتظر كلمة ابدأ مني قبل أي عمل.</div><button type="button" data-t="c2">نسخ</button></div>
+<p>بعد أن يعرض الأدوات اكتب <code>ابدأ</code>. يكمل A001 ثم A002 وما بعدها بلا أسئلة، ويبني تقرير HTML بعد كل دفعة.</p>
+<h3>الاستئناف بعد انقطاع أو في اليوم التالي</h3>
+<div class="row"><div class="cmd" id="c3">cd ~/montnero-store
+git status --short | head
+git pull
+claude --continue</div><button type="button" data-t="c3">نسخ</button></div>
+<p>إن بدأت جلسة جديدة بلا سياق اكتب:</p>
+<div class="row"><div class="cmd ar" id="c4">تابع. اقرأ product_audit/TERMINAL_PROMPT.md ثم BATCH_PROGRESS.md، ونفّذ التشغيل المستقل من حيث وقف العمل دون إعادة ما اكتمل. إن وُجدت ملفات غير محفوظة في git فاحفظها وادفعها أولاً.</div><button type="button" data-t="c4">نسخ</button></div>
+<h3>النموذج والصلاحيات</h3>
+<ul>
+<li>النموذج: <code>/model sonnet</code> للجلسة والوكلاء. Opus للمراجعة النهائية فقط. تجنب Haiku وGemini Flash لهذا العمل.</li>
+<li>أبق وضع الصلاحيات التلقائي أثناء التشغيل المستقل (بدّل بـ Shift+Tab). لا تستخدم <code>--dangerously-skip-permissions</code> مع root.</li>
+<li>لا يرفع Claude Code إلى سلة. الرفع من صفحة المزامنة التي تفتحها أنت.</li>
+</ul></section>
+
+<section id="e"><h2>5. سير الدفعة (200 منتج)</h2>
+<ol>
+<li>بحث بالباركود والاسم ثم موقع الماركة والموزعين، وتثبيت الاسم والحجم والدرجة.</li>
+<li>صور إضافية (حتى 5) تُفحص بصرياً قبل اعتمادها.</li>
+<li>كتابة الحقول لكل منتج على حدة (وكلاء sonnet ~20 منتجاً لكل وكيل).</li>
+<li><code>render_desc.py</code> حتى «0 with problems»، ثم مراجعة وتنويع الجمل المتكررة.</li>
+<li>بناء ملف ميرشنت <code>build_merchant.py</code> وصفحة المزامنة <code>make_sync_page.py</code> ونشرها بالرابط نفسه.</li>
+<li>أنت تشغّل الصفحة، ثم يقرأ Claude النتائج ويملأ الرابط والصورة في ميرشنت.</li>
+<li>تقرير HTML بعد الدفعة، حفظ ودفع إلى GitHub، ثم الدفعة التالية.</li>
+</ol></section>
+
+<section id="f"><h2>6. المهام</h2>
+<div class="tw"><table><thead><tr><th>المهمة</th><th>الحالة</th><th>التفاصيل</th></tr></thead><tbody>
+<tr><td>تشغيل صفحة A001</td><td><span class="st prog">بانتظارك</span></td><td>154 منتجاً، 2 من التجربة نُفّذا مسبقاً. افتح الرابط وابدأ.</td></tr>
+<tr><td>معلقات A001 (35)</td><td><span class="st todo">للطرفية</span></td><td>3 و4 و18 و24 إلى 27 و49 و53 و95 و101 و104 و106 و109 إلى 111 و113 و135 و142 و148 إلى 151 و153 إلى 155 و160 إلى 167 و171.</td></tr>
+<tr><td>A002 (201 إلى 400)</td><td><span class="st todo">لم تبدأ</span></td><td>منها منتجات «اكسا» تحتاج بحثاً بالباركود.</td></tr>
+<tr><td>A003 إلى A012</td><td><span class="st todo">لم تبدأ</span></td><td>2282 ÷ 200، الأخيرة 82 منتجاً.</td></tr>
+<tr><td>بيوتي1 (4390 صفاً)</td><td><span class="st todo">لم يبدأ</span></td><td>كشف التكرار مع المخزون والمتجر قبل أي رفع.</td></tr>
+<tr><td>التصنيفات والماركات</td><td><span class="st todo">لم يبدأ</span></td><td>ملف <code>categories_and_brands_execution_plan.txt</code>. الماركات تُنشأ يدوياً في سلة (لا أداة MCP) بشعار رسمي.</td></tr>
+<tr><td>صور المنتجات</td><td><span class="st todo">مؤجل</span></td><td>التحقق البصري يتم من الطرفية لأن بيئة السحابة تحجب مواقع الصور.</td></tr>
+<tr><td>تصحيح أخطاء سابقة</td><td><span class="st done">مكتوب</span></td><td>درجات Super Stay (19 و20 و22 و23)، «أوسي» هي Aussie، GTIN المفقود.</td></tr>
+<tr><td>ملف الكميات النهائي</td><td><span class="st done">مُطبّق بالقاعدة</span></td><td>20 أو 10 عبر الصفحة.</td></tr>
+<tr><td>Merchant Center</td><td><span class="st prog">جارٍ</span></td><td>MERCHANT_A001.csv (154 صفاً). الماركة فارغة لمنتجات اكسا ويلزم حسمها قبل الاستيراد.</td></tr>
+</tbody></table></div></section>
+
+<section id="g"><h2>7. المشاكل الشائعة</h2>
+<div class="tw"><table><thead><tr><th>المشكلة</th><th>الحل</th></tr></thead><tbody>
+<tr><td>رسالة Headroom: المنفذ 20128 لا يستجيب</td><td><code>headroom init -g --port 8787 claude</code> أو اضبط <code>ANTHROPIC_BASE_URL</code> على المنفذ 8787 أو أزله.</td></tr>
+<tr><td>النموذج Gemini وليس Claude</td><td><code>/model sonnet</code> أو أزل التوجيه إلى Gemini.</td></tr>
+<tr><td>الصفحة: خطأ unavailable في الحفظ</td><td>مؤقت. أعد الضغط على «ابدأ» أو «إعادة التي فشلت»، والصفحة تعيد المحاولة تلقائياً.</td></tr>
+<tr><td>سلة ترفض GTIN مكرراً (422)</td><td>الصفحة تعيد المحاولة بدون GTIN وتسجل ذلك. راجع المنتج المكرر لاحقاً.</td></tr>
+<tr><td>انقطع الإنترنت</td><td><code>claude --continue</code> داخل المجلد. التقدم محفوظ في الملفات.</td></tr>
+<tr><td>صفحة المزامنة لا تصل إلى سلة</td><td>افتحها من claude.ai وأنت مسجّل، ووافق على إذن موصل سلة.</td></tr>
+</tbody></table></div></section>
+
+<section id="h"><h2>8. أهم الملفات (product_audit/)</h2>
+<ul>
+<li><code>TERMINAL_PROMPT.md</code> و<code>TERMINAL_GUIDE.md</code>: تعليمات الطرفية.</li>
+<li><code>PROJECT_RULES.md</code> و<code>AGENT_BRIEF.md</code>: القواعد وتعليمات الوكلاء.</li>
+<li><code>MASTER_PROGRESS.md</code> و<code>BATCH_PROGRESS.md</code>: أين وصل العمل.</li>
+<li><code>reference/description-approved-sample.html</code>: عيّنة الأسلوب المعتمد.</li>
+<li><code>data/master_index.csv</code>: فهرس 2282 منتجاً (السعر المطلوب وGTIN المصحح). <code>data/A001_pending.json</code>: المعلّق.</li>
+<li><code>batches_v2/</code>: محتوى المنتجات. <code>pages/</code>: صفحات المزامنة والتقارير. <code>merchant/</code>: ملفات ميرشنت.</li>
+<li><code>tools/</code>: render_desc وmake_sync_page وmake_report وbuild_merchant وbuild_index.</li>
+</ul></section>
+</main>
+<script>
+document.querySelectorAll('button[data-t]').forEach(b=>b.addEventListener('click',async()=>{
+  const el=document.getElementById(b.dataset.t);const txt=el.textContent;
+  try{await navigator.clipboard.writeText(txt);b.textContent='تم النسخ'}catch(e){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='حدّد ثم انسخ'}
+  setTimeout(()=>{b.textContent='نسخ'},1800)}));
+</script>
