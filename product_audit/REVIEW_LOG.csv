@@ -1,0 +1,4 @@
+﻿n,barcode,salla_id,status,changes,date
+1,1018158,114321212,updated+verified,"name (14جرا->14 جم, Latin brand), description rewritten, meta title/desc; price 24 OK (16.5x1.45); gtin empty (barcode invalid)",2026-11-27
+2,11072480,974331732,updated+verified,"name Latin brand, description rewritten (removed padded template), meta without shop-name typo; price 65 OK; brand_id missing (Priorin not in store)",2026-11-27
+3,30074576,650192477,reviewed-ok,"content/brand/category fine; hidden, qty 0; price 30 OK",2026-11-27

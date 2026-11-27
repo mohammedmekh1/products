@@ -1,0 +1,5 @@
+﻿n,salla_id,issue,action_needed
+2,974331732,brand Priorin not in store brands,"add brand via execution plan, then set brand_id"
+1,114321212,image alt text still old Arabic name,alt not editable via update tool; low priority
+2,974331732,image alt still old,low priority
+all,,"Many old pages use padded template with filler FAQ (""ما نوع المنتج؟"") and Arabic brand in info list; shop name in meta in some",rewrite individually during review (not bulk)
